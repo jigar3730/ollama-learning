@@ -50,11 +50,11 @@ One goal of this project is to understand how model size, quantization, context 
 
 | Module | Topic | Status |
 | --- | --- | --- |
-| 1 | Ollama Fundamentals | 🟢 In Progress |
-| 2 | Ollama CLI & Model Management | ⬜ |
-| 3 | Model Selection & Quantization | ⬜ |
-| 4 | CPU, GPU, RAM & VRAM | ⬜ |
-| 5 | Custom Modelfiles | ⬜ |
+| 1 | Ollama Fundamentals | ✅ |
+| 2 | Ollama CLI & Model Management | ✅ |
+| 3 | Model Selection & Quantization | 🟢 In Progress |
+| 4 | CPU, GPU, RAM & VRAM | 🟢 In Progress |
+| 5 | Custom Modelfiles | 🟢 In Progress |
 | 6 | Ollama REST API | ⬜ |
 | 7 | Python Integration | ⬜ |
 | 8 | Ollama + Docker | ⬜ |
@@ -152,6 +152,144 @@ Runtime:         100% GPU
 An accidental pull of the larger Gemma model became a useful experiment demonstrating that:
 
 > **Model download size, parameter count, and runtime GPU memory are related but are not the same measurement.**
+
+---
+
+## Day 3 — Model Lifecycle & Runtime Management ✅
+
+Learned how Ollama manages the lifecycle of locally installed models.
+
+Commands practiced:
+
+```powershell
+ollama list
+ollama ps
+ollama run llama3.2
+ollama stop llama3.2
+ollama show llama3.2
+```
+
+Observed lifecycle:
+
+```text
+Model stored on disk
+        ↓
+ollama run
+        ↓
+Loaded into GPU / RAM
+        ↓
+Inference
+        ↓
+Keep-alive period
+        ↓
+Automatic unload or ollama stop
+```
+
+Key observations:
+
+- `ollama list` shows models installed on disk.
+- `ollama ps` shows models currently loaded for inference.
+- `ollama stop` unloads a model from runtime memory without deleting it.
+- Llama 3.2 used approximately `2.6 GB` at runtime and ran at `100% GPU`.
+- Ollama automatically unloaded the model after its keep-alive period.
+- Model disk size and runtime memory footprint are different measurements.
+- `ollama show` exposes architecture, parameters, context length, quantization, and capabilities.
+
+---
+
+## Day 4 — Modelfiles & Finance-Focused Model Customization ✅
+
+Learned how Ollama uses a `Modelfile` to customize the behavior of an existing model.
+
+Inspected the base definition with:
+
+```powershell
+ollama show --modelfile llama3.2
+```
+
+Important Modelfile concepts introduced:
+
+```text
+FROM
+SYSTEM
+TEMPLATE
+PARAMETER
+LICENSE
+```
+
+A temporary `devops-assistant` model was first created to learn the mechanics of `ollama create`.
+
+The exercise then moved to the project's finance focus by creating:
+
+```text
+market-researcher:latest
+```
+
+using:
+
+```powershell
+ollama create market-researcher -f .\Modelfile.finance
+```
+
+Current finance Modelfile:
+
+```text
+FROM llama3.2
+
+SYSTEM """
+You are a financial market research assistant.
+
+Analyze only the facts provided by the user.
+
+Rules:
+- Do not invent missing market data.
+- Do not calculate indicators unless explicitly requested.
+- Separate bullish, bearish, and neutral observations.
+- Highlight conflicting signals.
+- Keep the assessment concise.
+- End with a one-sentence overall assessment.
+- Do not provide personalized investment advice.
+"""
+```
+
+### Finance experiment
+
+Both vanilla `llama3.2` and `market-researcher` were given:
+
+```text
+Ticker: SOFI
+RSI: 72
+Price: Above 50-day moving average
+Volume: 1.8x average
+
+Provide a concise technical assessment.
+```
+
+The custom model produced more structured output, but the experiment exposed an important limitation: **prompt engineering does not guarantee correct financial reasoning**.
+
+This led to an important architecture decision:
+
+```text
+Market Data
+     ↓
+Python
+     ↓
+Calculate + validate indicators
+     ↓
+Structured facts
+     ↓
+Ollama
+     ↓
+Interpret + synthesize
+     ↓
+Structured Research Brief
+```
+
+Core principle:
+
+> **Use deterministic code for financial calculations and validation. Use the LLM primarily for interpretation, synthesis, and explanation.**
+
+This principle will guide later work with structured JSON, the Ollama REST API, Python, RAG, and the Stock Research Assistant.
 
 ---
 

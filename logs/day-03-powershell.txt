@@ -1,0 +1,69 @@
+﻿
+PS C:\Apps\Projects\ollama-learning> ollama list
+NAME               ID              SIZE      MODIFIED
+gemma4:latest      c6eb396dbd59    9.6 GB    10 hours ago
+gemma4:e2b         7fbdbf8f5e45    7.2 GB    7 weeks ago
+llama3.2:latest    a80c4f17acd5    2.0 GB    2 months ago
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL
+PS C:\Apps\Projects\ollama-learning> ollama run llama3.2
+>>> explain docker in one sentence.
+Docker is a containerization platform that allows developers to package, ship,
+and run applications in isolated and portable environments, known as containers,
+which provide a consistent and reliable way to deploy applications across
+different operating systems and environments.
+
+>>> /bye
+PS C:\Apps\Projects\ollama-learning> okkama ps
+okkama : The term 'okkama' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ okkama ps
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (okkama:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+okkama : The term 'okkama' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a path was
+included, verify that the path is correct and try again.
+At line:1 char:1
++ okkama ps
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (okkama:String) [], CommandNotFoundExce
+   ption
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME               ID              SIZE      PROCESSOR    CONTEXT    UNTIL
+
+llama3.2:latest    a80c4f17acd5    2.6 GB    100% GPU     4096       4 minutes from now
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME               ID              SIZE      PROCESSOR    CONTEXT    UNTIL
+
+llama3.2:latest    a80c4f17acd5    2.6 GB    100% GPU     4096       3 minutes from now
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME               ID              SIZE      PROCESSOR    CONTEXT    UNTIL
+
+llama3.2:latest    a80c4f17acd5    2.6 GB    100% GPU     4096       About a minute fro
+m now
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME               ID              SIZE      PROCESSOR    CONTEXT    UNTIL
+
+llama3.2:latest    a80c4f17acd5    2.6 GB    100% GPU     4096       5 seconds from now
+PS C:\Apps\Projects\ollama-learning> ollama ps
+NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL
+PS C:\Apps\Projects\ollama-learning> ollama run llama3.2
+>>> /bye
+PS C:\Apps\Projects\ollama-learning> ollama ps
+
+llama3.2:latest    a80c4f17acd5    2.6 GB    100% GPU     4096       4 minutes from now
+PS C:\Apps\Projects\ollama-learning> ollama stop llama3.2
+
+PS C:\Apps\Projects\ollama-learning> ollama ps
+
+PS C:\Apps\Projects\ollama-learning> ollama show llama3.2
+
+PS C:\Apps\Projects\ollama-learning> Stop-Transcript
+**********************
+Windows PowerShell transcript end
+End time: 20260902065757
+**********************

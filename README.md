@@ -51,17 +51,25 @@ One goal of this project is to understand how model size, quantization, context 
 | Module | Topic | Status |
 | --- | --- | --- |
 | 1 | Ollama Fundamentals | ✅ |
-| 2 | Ollama CLI & Model Management | ✅ |
-| 3 | Model Selection & Quantization | ✅ |
-| 4 | CPU, GPU, RAM & VRAM | 🟢 In Progress |
-| 5 | Custom Modelfiles | ✅ |
-| 6 | Ollama REST API | ✅ |
-| 7 | Python Integration | ⬜ |
-| 8 | Ollama + Docker | ⬜ |
-| 9 | Embeddings & RAG | ⬜ |
-| 10 | Production Engineering | ⬜ |
-| 11 | Performance Optimization | ⬜ |
-| 12 | Stock Research Assistant | ⬜ |
+| 2 | Models, Parameters & Quantization | ✅ |
+| 3 | Tokens & Context Windows | ✅ |
+| 4 | Model / Runtime Configuration | ✅ |
+| 5 | Ollama REST API via PowerShell | ✅ |
+| 6 | Python → Ollama REST API | ⏭️ Next |
+| 7 | Structured JSON Output & Validation | ⬜ |
+| 8 | Model Selection & Benchmarking | ⬜ |
+| 9 | Hugging Face Ecosystem | ⬜ |
+| 10 | GGUF, Quantization & Hugging Face → Ollama | ⬜ |
+| 11 | Custom Ollama Modelfiles | ⬜ |
+| 12 | Docker + Ollama | ⬜ |
+| 13 | Embeddings | ⬜ |
+| 14 | RAG Fundamentals | ⬜ |
+| 15 | Finance-Document RAG | ⬜ |
+| 16 | Performance Benchmarking & Optimization | ⬜ |
+| 17 | Production Architecture, Logging & Security | ⬜ |
+| 18 | Capstone — Local AI Stock Research Assistant | ⬜ |
+
+> **Current checkpoint:** Day 5 complete. Next milestone: **Python → Ollama REST API**.
 
 ---
 
@@ -481,6 +489,42 @@ Provide a concise technical assessment.
 
 These examples are for learning and research purposes and are not investment advice.
 
+Preferred finance architecture:
+
+```text
+Market / Fundamental Data
+        ↓
+Quantitative & Technical Analysis
+        ↓
+Structured Fact Packet
+        ↓
+Python
+        ↓
+Ollama REST API
+        ↓
+Local LLM
+        ↓
+Grounded Stock Research Brief
+```
+
+Explicit grounding is required: the LLM should not invent meanings, units, thresholds, or definitions for proprietary financial metrics.
+
+---
+
+# 🤗 Hugging Face Learning Track
+
+Hugging Face is now a formal part of the Ollama roadmap, focused on understanding, selecting, evaluating, converting, running, and eventually publishing models used with Ollama.
+
+## Hugging Face Topics
+
+Topics include model cards, Base vs Instruct models, architectures, parameter sizes, context lengths, licensing, evaluation and benchmarks, GGUF, quantization variants, local-hardware model selection, the Hugging Face → GGUF → Ollama workflow, and evaluation for financial-analysis workloads.
+
+## Publishing Milestone
+
+Eventually publish an **original project artifact** under `jigar3730`, such as a fine-tuned model, LoRA/adapter, permitted GGUF quantization, model card, evaluation results, usage examples, and intended-use/limitation documentation.
+
+Before publishing, verify upstream licensing, redistribution rights, provenance, model-card requirements, versioning, evaluation methodology, and attribution. Existing models should not simply be republished and described as original project models.
+
 ---
 
 # 🚀 Capstone Project
@@ -489,7 +533,7 @@ The final project will be a:
 
 ## Local AI Stock Research Assistant
 
-Potential architecture:
+Target architecture:
 
 ```text
 Stock / Market Data
@@ -500,27 +544,22 @@ Fundamental Analysis
         ↓
 Research Context
         ↓
+Structured Fact Packet
+        ↓
 Python Application
         ↓
 Ollama REST API
         ↓
-Local LLM
+Selected Local LLM
         ↓
 Structured Stock Research Brief
 ```
 
-The goal is to combine everything learned throughout the project:
+The capstone will combine Ollama, local LLMs, Hugging Face, model selection, GGUF/quantization, Modelfiles, REST APIs, Python, Docker, structured output, embeddings, RAG, grounding, benchmarking, performance optimization, and production engineering.
 
-- Ollama
-- Local LLMs
-- Model selection
-- Modelfiles
-- REST APIs
-- Python
-- Docker
-- RAG
-- Structured output
-- Performance optimization
+Where useful, the same finance test cases will be run across multiple models so **quality, hallucination rate, latency, consistency, and resource utilization** can be compared objectively.
+
+The LLM should operate primarily as an interpretation/research layer over deterministic financial calculations rather than inventing calculations, thresholds, units, or definitions for proprietary metrics.
 
 ---
 

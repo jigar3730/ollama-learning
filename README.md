@@ -52,10 +52,10 @@ One goal of this project is to understand how model size, quantization, context 
 | --- | --- | --- |
 | 1 | Ollama Fundamentals | ✅ |
 | 2 | Ollama CLI & Model Management | ✅ |
-| 3 | Model Selection & Quantization | 🟢 In Progress |
+| 3 | Model Selection & Quantization | ✅ |
 | 4 | CPU, GPU, RAM & VRAM | 🟢 In Progress |
-| 5 | Custom Modelfiles | 🟢 In Progress |
-| 6 | Ollama REST API | ⬜ |
+| 5 | Custom Modelfiles | ✅ |
+| 6 | Ollama REST API | ✅ |
 | 7 | Python Integration | ⬜ |
 | 8 | Ollama + Docker | ⬜ |
 | 9 | Embeddings & RAG | ⬜ |
@@ -290,6 +290,160 @@ Core principle:
 > **Use deterministic code for financial calculations and validation. Use the LLM primarily for interpretation, synthesis, and explanation.**
 
 This principle will guide later work with structured JSON, the Ollama REST API, Python, RAG, and the Stock Research Assistant.
+
+---
+
+## Day 5 — PowerShell & Ollama REST API ✅
+
+Moved beyond the Ollama CLI and successfully invoked the local Ollama server through its HTTP REST API.
+
+Verified Ollama and the installed models with:
+
+```powershell
+curl.exe http://localhost:11434/api/tags
+```
+
+The main generation endpoint used was:
+
+```text
+POST http://localhost:11434/api/generate
+```
+
+### PowerShell REST call
+
+```powershell
+$request = @{
+    model  = "market-researcher"
+    prompt = "Analyze RSI 72"
+    stream = $false
+}
+
+$body = $request | ConvertTo-Json
+
+$result = Invoke-RestMethod `
+    -Uri "http://localhost:11434/api/generate" `
+    -Method Post `
+    -ContentType "application/json" `
+    -Body $body
+
+$result.response
+```
+
+### PowerShell concepts practiced
+
+- Variables, hashtables, pipelines, and object properties
+- `ConvertTo-Json` and `ConvertFrom-Csv`
+- `Invoke-RestMethod`
+- Here-strings
+- Numeric casting with `[double]`
+- Rounding with `[math]::Round()`
+- `if / elseif / else`
+- Comparison operators such as `-gt`, `-lt`, `-ge`, and `-le`
+- Logical operators such as `-and` and `-or`
+- Nested PowerShell objects and JSON using `ConvertTo-Json -Depth`
+
+### Finance exercise
+
+Coiled Cobra scanner CSV data for APH and MNDY was parsed into PowerShell objects:
+
+```powershell
+$stocks = $csv | ConvertFrom-Csv
+$stock = $stocks[0]
+```
+
+Instead of asking the LLM to calculate deterministic metrics, PowerShell calculated them:
+
+```powershell
+$entry = [double]$stock.'Stock Entry'
+$stop = [double]$stock.'Stock Stop'
+$target1 = [double]$stock.'Target 1'
+
+$risk = [math]::Round($entry - $stop, 2)
+$reward = [math]::Round($target1 - $entry, 2)
+$rewardRisk = [math]::Round($reward / $risk, 2)
+```
+
+APH results:
+
+```text
+Risk/share:       4.10
+Reward/Target 1:  8.20
+Reward/Risk:      2.00
+```
+
+PowerShell also derived authoritative classifications:
+
+```text
+RSIState:     Neutral
+VolumeState:  Below average
+TrendState:   Price above both EMA20 and EMA50
+```
+
+### Structured fact packet
+
+A nested fact packet was built and serialized before calling Ollama:
+
+```text
+Scanner CSV
+     ↓
+PowerShell parses data
+     ↓
+PowerShell calculates metrics
+     ↓
+PowerShell applies deterministic rules
+     ↓
+Structured JSON fact packet
+     ↓
+Ollama REST API
+     ↓
+market-researcher
+     ↓
+Grounded research narrative
+```
+
+Example:
+
+```json
+{
+  "Symbol": "APH",
+  "Setup": "SETUP_LONG",
+  "Derived": {
+    "TrendState": "Price above both EMA20 and EMA50",
+    "RSIState": "Neutral",
+    "VolumeState": "Below average",
+    "RiskPerShare": 4.1,
+    "RewardToTarget1": 8.2,
+    "RewardRisk": 2
+  }
+}
+```
+
+Serialized with:
+
+```powershell
+$factJson = $factPacket | ConvertTo-Json -Depth 5
+```
+
+### Day 5 architecture lesson
+
+```text
+Raw Market Data
+      ↓
+Deterministic Code
+  calculate + validate + classify
+      ↓
+Structured Fact Packet
+      ↓
+Ollama REST API
+      ↓
+Local LLM
+      ↓
+Interpret + summarize + explain
+```
+
+> **Code computes and validates facts. The LLM explains and synthesizes those facts.**
+
+This pattern will carry directly into Python integration and eventually the Local AI Stock Research Assistant.
 
 ---
 

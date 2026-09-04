@@ -1,0 +1,972 @@
+PS C:\Users\jpate> curl.exe http://localhost:11434/api/tags
+{"models":[{"name":"market-researcher:latest","model":"market-researcher:latest","modified_at":"2026-09-02T07:26:58.216383-04:00","size":2019393204,"digest":"436cece1ab04d71ad181791992577d4103ab79db1a39aa27375f5301aa935125","details":{"parent_model":"llama3.2:latest","format":"gguf","family":"llama","families":["llama"],"parameter_size":"3.2B","quantization_level":"Q4_K_M","context_length":131072,"embedding_length":3072},"capabilities":["completion","tools"]},{"name":"devops-assistant:latest","model":"devops-assistant:latest","modified_at":"2026-09-02T07:07:54.3104519-04:00","size":2019392907,"digest":"de458d5d559bcd2951a33f90bc0921d468fb5e08235ea4d90180d61e6ead3482","details":{"parent_model":"llama3.2:latest","format":"gguf","family":"llama","families":["llama"],"parameter_size":"3.2B","quantization_level":"Q4_K_M","context_length":131072,"embedding_length":3072},"capabilities":["completion","tools"]},{"name":"gemma4:latest","model":"gemma4:latest","modified_at":"2026-09-01T20:44:58.974295-04:00","size":9608350718,"digest":"c6eb396dbd5992bbe3f5cdb947e8bbc0ee413d7c17e2beaae69f5d569cf982eb","details":{"parent_model":"","format":"gguf","family":"gemma4","families":["gemma4"],"parameter_size":"8.0B","quantization_level":"Q4_K_M"},"capabilities":["completion","tools","thinking"]},{"name":"gemma4:e2b","model":"gemma4:e2b","modified_at":"2026-07-14T16:33:30.9190095-04:00","size":7162405886,"digest":"7fbdbf8f5e45a75bb122155ed546e765b4d9c53a1285f62fd9f506baa1c5a47e","details":{"parent_model":"","format":"gguf","family":"gemma4","families":["gemma4"],"parameter_size":"5.1B","quantization_level":"Q4_K_M"},"capabilities":["completion","tools","thinking"]},{"name":"llama3.2:latest","model":"llama3.2:latest","modified_at":"2026-06-17T21:50:52.6233765-04:00","size":2019393189,"digest":"a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72","details":{"parent_model":"","format":"gguf","family":"llama","families":["llama"],"parameter_size":"3.2B","quantization_level":"Q4_K_M","context_length":131072,"embedding_length":3072},"capabilities":["completion","tools"]}]}
+PS C:\Users\jpate> curl.exe http://localhost:11434/api/generate `
+>>   -d '{"model":"market-researcher","prompt":"RSI is 72. Price is above the 50-day moving average. Provide a one-sentence technical assessment.","stream":false}'
+{"error":"invalid character 'm' looking for beginning of object key string"}
+PS C:\Users\jpate> $body = @{
+>>     model  = "market-researcher"
+>>     prompt = "RSI is 72. Price is above the 50-day moving average. Provide a one-sentence technical assessment."
+>>     stream = $false
+>> } | ConvertTo-Json
+PS C:\Users\jpate>
+PS C:\Users\jpate> Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+
+
+model                : market-researcher
+created_at           : 2026-09-04T00:34:44.1425744Z
+response             : The RSI overbought signal, combined with the price being above the 50-day moving average,
+                       indicates a potentially oversold correction could be underway, but the bullish trend signal
+                       remains intact.
+
+                       Overall assessment: Neutral with a leaning towards bulls.
+done                 : True
+done_reason          : stop
+context              : {128006, 9125, 128007, 271...}
+total_duration       : 4890039800
+load_duration        : 4146602600
+prompt_eval_count    : 127
+prompt_eval_duration : 82398000
+eval_count           : 50
+eval_duration        : 650807000
+
+
+
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate>
+PS C:\Users\jpate> $result.response+
+>>
+At line:1 char:18
++ $result.response+
++                  ~
+You must provide a value expression following the '+' operator.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ExpectedValueExpression
+
+PS C:\Users\jpate> $result.response+
+>> =^C
+PS C:\Users\jpate> $result.response
+**Bullish observation**: The price is above the 50-day moving average, which may indicate a potential buying opportunity.
+
+**Neutral observation**: The RSI is at 72, which is above the 70 threshold, indicating potential overbought conditions.
+
+**Neutral observation**: The RSI has not crossed below the 30 threshold, which could suggest that the price has not yet entered oversold territory.
+
+**Overall assessment**: The combination of the price above the 50-day moving average and the RSI in overbought territory suggests a potential short-term top, but a clear signal has not been generated.
+PS C:\Users\jpate> $name = "Ollama"
+PS C:\Users\jpate> $name
+Ollama
+PS C:\Users\jpate> $model = "market-researcher"
+PS C:\Users\jpate> $model
+market-researcher
+PS C:\Users\jpate> $request = @{
+>>     model  = "market-researcher"
+>>     prompt = "Analyze RSI 72"
+>>     stream = $false
+>> }
+PS C:\Users\jpate> $request
+
+Name                           Value
+----                           -----
+prompt                         Analyze RSI 72
+model                          market-researcher
+stream                         False
+
+
+PS C:\Users\jpate> $request.model
+market-researcher
+PS C:\Users\jpate> $request | ConvertTo-Json
+{
+    "prompt":  "Analyze RSI 72",
+    "model":  "market-researcher",
+    "stream":  false
+}
+PS C:\Users\jpate> Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+
+
+model                : market-researcher
+created_at           : 2026-09-04T00:44:39.6522497Z
+response             : The combination of a high RSI (above 70 is often considered overbought) and a price above the
+                       50-day moving average indicates a strong bullish signal, suggesting a potential short-term top.
+
+                       **Bullish observations:**
+
+                       * High RSI value
+
+                       **Bearish observations:**
+
+                       * None
+
+                       **Neutral observations:**
+
+                       * Price above 50-day moving average
+
+                       **Conflicting signals:**
+
+                       * Overbought RSI may lead to a potential correction
+
+                       **Overall assessment:** A short-term top is possible, but further analysis is needed to confirm
+                       the direction.
+done                 : True
+done_reason          : stop
+context              : {128006, 9125, 128007, 271...}
+total_duration       : 4331217900
+load_duration        : 2710801000
+prompt_eval_count    : 127
+prompt_eval_duration : 70786000
+eval_count           : 118
+eval_duration        : 1539250000
+
+
+
+PS C:\Users\jpate> $body
+{
+    "prompt":  "RSI is 72. Price is above the 50-day moving average. Provide a one-sentence technical assessment.",
+    "model":  "market-researcher",
+    "stream":  false
+}
+PS C:\Users\jpate> $request
+
+Name                           Value
+----                           -----
+prompt                         Analyze RSI 72
+model                          market-researcher
+stream                         False
+
+
+PS C:\Users\jpate> $body = $request | converTo-Json
+converTo-Json : The term 'converTo-Json' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify
+that the path is correct and try again.
+At line:1 char:20
++ $body = $request | converTo-Json
++                    ~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (converTo-Json:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> $body = $request | ConverTo-Json
+ConverTo-Json : The term 'ConverTo-Json' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify
+that the path is correct and try again.
+At line:1 char:20
++ $body = $request | ConverTo-Json
++                    ~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (ConverTo-Json:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate> $body
+{
+    "prompt":  "Analyze RSI 72",
+    "model":  "market-researcher",
+    "stream":  false
+}
+PS C:\Users\jpate> Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+
+
+model                : market-researcher
+created_at           : 2026-09-04T00:53:25.3784555Z
+response             : **Bullish Observations:**
+
+                       * RSI value of 72 indicates overbought conditions, suggesting potential reversal.
+
+                       **Bearish Observations:**
+
+                       * High RSI value may lead to a sharp correction or reversal.
+
+                       **Neutral Observations:**
+
+                       * RSI alone is not a reliable indicator, and its value does not necessarily predict market movements.
+
+                       **Conflicting Signals:**
+                       The high RSI value may indicate a potential reversal, but the market's behavior can be unpredictable.
+
+                       **Overall Assessment:**
+                       The RSI value of 72 indicates potential overbought conditions, but its accuracy in predicting market movements is uncertain.
+done                 : True
+done_reason          : stop
+context              : {128006, 9125, 128007, 271...}
+total_duration       : 3861937000
+load_duration        : 2082403700
+prompt_eval_count    : 109
+prompt_eval_duration : 66837000
+eval_count           : 128
+eval_duration        : 1707545000
+
+
+
+PS C:\Users\jpate> $csv = @"
+>> Symbol,Setup Type,Source,Mode,AsOf Date,Stock Entry,Stock Stop,Target 1,Target 2,Risk Per Share,Close,EMA20,EMA50,ATR,RSI,Swing Low,Swing High,Fib 61.8%,Fib 78.6%,Score,Grade,Checks Met,ML_Pred_Return,ML_Rank,Dist_EMA20_ATR,Dist_EMA50_ATR,Rel_Volume_5_20,BB_Width_ATR,RS_vs_SPY_21d,RS_vs_SPY_63d,Rel_Volume_20d,Notes
+>> APH,SETUP_LONG,coiled_cobra,daily,2026-09-03,81.33,77.23,89.53,93.63,4.1,82.07,80.49,79.45,2.94,54.01,75.75,82.16,67.45,61.52,71.0,B - Valid Coil,5/8,1.0,1.0,0.5379,0.8928,1.0313321810940688,3.934934179232041,-0.0514182519101837,0.0961655453236252,0.89,B - Valid Coil
+>> MNDY,SETUP_LONG,coiled_cobra,daily,2026-09-03,96.0,91.14,105.72,110.58,4.86,97.33,93.11,87.79,5.32,57.68,88.51,102.0,119.88,92.45,71.0,B - Valid Coil,5/8,0.9583,2.0,0.7924,1.7917,0.6438999627277964,3.4431916184907467,0.0599066714776361,0.0908934204385838,0.55,B - Valid Coil
+>> "@
+PS C:\Users\jpate> $stocks = $csv | ConvertFrom-Csv
+PS C:\Users\jpate> $stocks
+
+
+Symbol          : APH
+Setup Type      : SETUP_LONG
+Source          : coiled_cobra
+Mode            : daily
+AsOf Date       : 2026-09-03
+Stock Entry     : 81.33
+Stock Stop      : 77.23
+Target 1        : 89.53
+Target 2        : 93.63
+Risk Per Share  : 4.1
+Close           : 82.07
+EMA20           : 80.49
+EMA50           : 79.45
+ATR             : 2.94
+RSI             : 54.01
+Swing Low       : 75.75
+Swing High      : 82.16
+Fib 61.8%       : 67.45
+Fib 78.6%       : 61.52
+Score           : 71.0
+Grade           : B - Valid Coil
+Checks Met      : 5/8
+ML_Pred_Return  : 1.0
+ML_Rank         : 1.0
+Dist_EMA20_ATR  : 0.5379
+Dist_EMA50_ATR  : 0.8928
+Rel_Volume_5_20 : 1.0313321810940688
+BB_Width_ATR    : 3.934934179232041
+RS_vs_SPY_21d   : -0.0514182519101837
+RS_vs_SPY_63d   : 0.0961655453236252
+Rel_Volume_20d  : 0.89
+Notes           : B - Valid Coil
+
+Symbol          : MNDY
+Setup Type      : SETUP_LONG
+Source          : coiled_cobra
+Mode            : daily
+AsOf Date       : 2026-09-03
+Stock Entry     : 96.0
+Stock Stop      : 91.14
+Target 1        : 105.72
+Target 2        : 110.58
+Risk Per Share  : 4.86
+Close           : 97.33
+EMA20           : 93.11
+EMA50           : 87.79
+ATR             : 5.32
+RSI             : 57.68
+Swing Low       : 88.51
+Swing High      : 102.0
+Fib 61.8%       : 119.88
+Fib 78.6%       : 92.45
+Score           : 71.0
+Grade           : B - Valid Coil
+Checks Met      : 5/8
+ML_Pred_Return  : 0.9583
+ML_Rank         : 2.0
+Dist_EMA20_ATR  : 0.7924
+Dist_EMA50_ATR  : 1.7917
+Rel_Volume_5_20 : 0.6438999627277964
+BB_Width_ATR    : 3.4431916184907467
+RS_vs_SPY_21d   : 0.0599066714776361
+RS_vs_SPY_63d   : 0.0908934204385838
+Rel_Volume_20d  : 0.55
+Notes           : B - Valid Coil
+
+
+
+PS C:\Users\jpate> $stocks[0]
+
+
+Symbol          : APH
+Setup Type      : SETUP_LONG
+Source          : coiled_cobra
+Mode            : daily
+AsOf Date       : 2026-09-03
+Stock Entry     : 81.33
+Stock Stop      : 77.23
+Target 1        : 89.53
+Target 2        : 93.63
+Risk Per Share  : 4.1
+Close           : 82.07
+EMA20           : 80.49
+EMA50           : 79.45
+ATR             : 2.94
+RSI             : 54.01
+Swing Low       : 75.75
+Swing High      : 82.16
+Fib 61.8%       : 67.45
+Fib 78.6%       : 61.52
+Score           : 71.0
+Grade           : B - Valid Coil
+Checks Met      : 5/8
+ML_Pred_Return  : 1.0
+ML_Rank         : 1.0
+Dist_EMA20_ATR  : 0.5379
+Dist_EMA50_ATR  : 0.8928
+Rel_Volume_5_20 : 1.0313321810940688
+BB_Width_ATR    : 3.934934179232041
+RS_vs_SPY_21d   : -0.0514182519101837
+RS_vs_SPY_63d   : 0.0961655453236252
+Rel_Volume_20d  : 0.89
+Notes           : B - Valid Coil
+
+
+
+PS C:\Users\jpate> $stocks[0].RSI
+54.01
+PS C:\Users\jpate> $stocks[0].Score
+71.0
+PS C:\Users\jpate> $stock = $stocks[0]
+PS C:\Users\jpate>
+PS C:\Users\jpate> $prompt = @"
+>> Analyze this stock setup for research purposes.
+>>
+>> Symbol: $($stock.Symbol)
+>> Setup: $($stock.'Setup Type')
+>> Close: $($stock.Close)
+>> Entry: $($stock.'Stock Entry')
+>> Stop: $($stock.'Stock Stop')
+>> Target 1: $($stock.'Target 1')
+>> Target 2: $($stock.'Target 2')
+>> RSI: $($stock.RSI)
+>> EMA20: $($stock.EMA20)
+>> EMA50: $($stock.EMA50)
+>> ATR: $($stock.ATR)
+>> Score: $($stock.Score)
+>> Grade: $($stock.Grade)
+>> Checks Met: $($stock.'Checks Met')
+>> Relative Volume 20d: $($stock.'Rel_Volume_20d')
+>> RS vs SPY 21d: $($stock.'RS_vs_SPY_21d')
+>> RS vs SPY 63d: $($stock.'RS_vs_SPY_63d')
+>>
+>> Provide:
+>> 1. Bullish observations
+>> 2. Bearish observations
+>> 3. Risk assessment
+>> 4. Overall setup quality
+>>
+>> Do not provide investment advice.
+>> "@
+PS C:\Users\jpate> $prompt
+Analyze this stock setup for research purposes.
+
+Symbol: APH
+Setup: SETUP_LONG
+Close: 82.07
+Entry: 81.33
+Stop: 77.23
+Target 1: 89.53
+Target 2: 93.63
+RSI: 54.01
+EMA20: 80.49
+EMA50: 79.45
+ATR: 2.94
+Score: 71.0
+Grade: B - Valid Coil
+Checks Met: 5/8
+Relative Volume 20d: 0.89
+RS vs SPY 21d: -0.0514182519101837
+RS vs SPY 63d: 0.0961655453236252
+
+Provide:
+1. Bullish observations
+2. Bearish observations
+3. Risk assessment
+4. Overall setup quality
+
+Do not provide investment advice.
+PS C:\Users\jpate> $request = @{
+>>     model  = "market-researcher"
+>>     prompt = $prompt
+>>     stream = $false
+>> }
+PS C:\Users\jpate> $request
+
+Name                           Value
+----                           -----
+prompt                         Analyze this stock setup for research purposes....
+model                          market-researcher
+stream                         False
+
+
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate> $result.response
+**Bullish Observations:**
+
+1. The stock is trading above the 50-day EMA (79.45), indicating a potential upward trend.
+2. The Relative Volume (RVOL) for the past 20 days is 0.89, indicating buying pressure.
+3. The stock has made a clear breakout above the previous resistance level at 81.33.
+4. The setup is a valid Coil pattern, which is often a bullish reversal pattern.
+5. The stock has made a new high at 89.53, which could indicate a strong upward momentum.
+
+**Bearish Observations:**
+
+1. The RSI (54.01) is slightly overbought, which may indicate a potential reversal.
+2. The stock is trading below the 20-day EMA (80.49), which could be a sign of a potential decline.
+3. The ATR (2.94) is relatively low, which may indicate a lack of volatility and a potential consolidation phase.
+4. The stock's Relative Strength Index (RS) vs SPY for the past 63 days is 0.0961655453236252, which is slightly above the 50-day moving average, indicating that the stock's performance may be weakening.
+5. The setup's Score (71.0) is lower than the average score for a valid Coil pattern, indicating some potential issues with the setup.
+
+**Risk Assessment:**
+
+The stop-loss level at 77.23 is relatively close to the entry point, indicating a tight risk management. However, the risk-reward ratio is not extremely high, considering the target prices of 89.53 and 93.63. A stop-loss at 77.23 would result in a 4.4% loss, while a target at 89.53 would result in a 9.8% gain.
+
+**Overall Setup Quality:**
+
+The setup is a valid Coil pattern, but the Score (71.0) and some of the bearish observations (e.g., slightly overbought RSI, low ATR) suggest that there may be some underlying uncertainty. The risk-reward ratio could be improved by adjusting the stop-loss or target prices. Overall, the setup has some bullish and bearish signals, making it a medium-risk, medium-reward opportunity.
+PS C:\Users\jpate> $($stock.Symbol)
+APH
+PS C:\Users\jpate> $stock.'Stock Entry'
+81.33
+PS C:\Users\jpate> $prompt
+Analyze this stock setup for research purposes.
+
+Symbol: APH
+Setup: SETUP_LONG
+Close: 82.07
+Entry: 81.33
+Stop: 77.23
+Target 1: 89.53
+Target 2: 93.63
+RSI: 54.01
+EMA20: 80.49
+EMA50: 79.45
+ATR: 2.94
+Score: 71.0
+Grade: B - Valid Coil
+Checks Met: 5/8
+Relative Volume 20d: 0.89
+RS vs SPY 21d: -0.0514182519101837
+RS vs SPY 63d: 0.0961655453236252
+
+Provide:
+1. Bullish observations
+2. Bearish observations
+3. Risk assessment
+4. Overall setup quality
+
+Do not provide investment advice.
+PS C:\Users\jpate> $prompt = @"
+>> You are analyzing a stock setup using ONLY the facts below.
+>>
+>> Do not invent values.
+>> Do not reinterpret target prices as historical prices.
+>> Do not call RSI overbought unless RSI >= 70.
+>> Do not call RSI oversold unless RSI <= 30.
+>> If Close > EMA20, state price is above EMA20.
+>> If Close > EMA50, state price is above EMA50.
+>> Relative Volume below 1.0 means volume is below its reference average.
+>> RS_vs_SPY values are relative-performance metrics, not moving averages.
+>>
+>> FACTS
+>>
+>> Symbol: $($stock.Symbol)
+>> Setup: $($stock.'Setup Type')
+>> Close: $($stock.Close)
+>> Entry: $($stock.'Stock Entry')
+>> Stop: $($stock.'Stock Stop')
+>> Target 1: $($stock.'Target 1')
+>> Target 2: $($stock.'Target 2')
+>> RSI: $($stock.RSI)
+>> EMA20: $($stock.EMA20)
+>> EMA50: $($stock.EMA50)
+>> ATR: $($stock.ATR)
+>> Score: $($stock.Score)
+>> Grade: $($stock.Grade)
+>> Checks Met: $($stock.'Checks Met')
+>> Relative Volume 20d: $($stock.'Rel_Volume_20d')
+>> RS vs SPY 21d: $($stock.'RS_vs_SPY_21d')
+>> RS vs SPY 63d: $($stock.'RS_vs_SPY_63d')
+>>
+>> Return:
+>> 1. Bullish observations
+>> 2. Bearish observations
+>> 3. Risk assessment
+>> 4. Overall setup quality
+>>
+>> Use only the supplied facts.
+>> "@
+PS C:\Users\jpate> $request.prompt = $prompt
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate> $result.response
+**Bullish Observations:**
+1. Close: 82.07 is above EMA20 (80.49) and above EMA50 (79.45).
+2. RSI: 54.01 is above the neutral zone, indicating a bullish momentum.
+
+**Bearish Observations:**
+1. Relative Volume 20d: 0.89 is below 1.0, indicating low volume.
+2. Score: 71.0 is below 80, indicating a lower-grade setup.
+3. Checks Met: 5/8 indicates that some checks are not fully met.
+
+**Risk Assessment:**
+The stop-loss is set at 77.23, which is below the entry point of 81.33. This suggests that the trader is taking a relatively aggressive risk.
+
+**Overall Setup Quality:**
+The setup has a Grade of B and meets 5 out of 8 checks. However, the low relative volume and lower score indicate some concerns with the setup.
+
+**Overall Assessment:**
+The APH long setup has a bullish price action, but it is compromised by low relative volume and a lower-grade score.
+PS C:\Users\jpate> $entry = [double]$stock.'Stock Entry'
+PS C:\Users\jpate> $stop = [double]$stock.'Stock Stop'
+PS C:\Users\jpate> $target1 = [double]$stock.'Target 1'
+PS C:\Users\jpate>
+PS C:\Users\jpate> $risk = $entry - $stop
+PS C:\Users\jpate> $reward = $target1 - $entry
+PS C:\Users\jpate> $rewardRisk = $reward / $risk
+PS C:\Users\jpate>
+PS C:\Users\jpate> $risk
+4.09999999999999
+PS C:\Users\jpate> $reward
+8.2
+PS C:\Users\jpate> $rewardRisk
+2
+PS C:\Users\jpate> $risk = [math]::Round($entry - $stop, 2)
+PS C:\Users\jpate> $reward = [math]::Round($target1 - $entry, 2)
+PS C:\Users\jpate> $rewardRisk = [math]::Round($reward / $risk, 2)
+PS C:\Users\jpate> $risk
+4.1
+PS C:\Users\jpate> $reward
+8.2
+PS C:\Users\jpate> $rewardRisk
+2
+PS C:\Users\jpate> $prompt = @"
+>> Analyze this stock setup using only the supplied facts.
+>>
+>> Symbol: $($stock.Symbol)
+>> Setup: $($stock.'Setup Type')
+>>
+>> Price:
+>> Close: $($stock.Close)
+>> Entry: $entry
+>> Stop: $stop
+>> Target 1: $target1
+>>
+>> Risk metrics calculated by PowerShell:
+>> Risk per share: $risk
+>> Reward to Target 1: $reward
+>> Reward/Risk ratio: $rewardRisk
+>>
+>> Technical data:
+>> RSI: $($stock.RSI)
+>> EMA20: $($stock.EMA20)
+>> EMA50: $($stock.EMA50)
+>> Relative Volume 20d: $($stock.'Rel_Volume_20d')
+>> RS vs SPY 21d: $($stock.'RS_vs_SPY_21d')
+>> RS vs SPY 63d: $($stock.'RS_vs_SPY_63d')
+>>
+>> Scanner:
+>> Score: $($stock.Score)
+>> Grade: $($stock.Grade)
+>> Checks Met: $($stock.'Checks Met')
+>>
+>> Rules:
+>> - Do not invent thresholds.
+>> - Do not recalculate the supplied risk metrics.
+>> - RSI 30-70 should not be called overbought or oversold.
+>> - Relative volume below 1.0 means below average.
+>> - Target prices are planned targets, not historical highs.
+>>
+>> Provide:
+>> 1. Trend assessment
+>> 2. Momentum assessment
+>> 3. Volume assessment
+>> 4. Risk/reward assessment
+>> 5. Overall setup assessment
+>> "@
+PS C:\Users\jpate> $prompt
+Analyze this stock setup using only the supplied facts.
+
+Symbol: APH
+Setup: SETUP_LONG
+
+Price:
+Close: 82.07
+Entry: 81.33
+Stop: 77.23
+Target 1: 89.53
+
+Risk metrics calculated by PowerShell:
+Risk per share: 4.1
+Reward to Target 1: 8.2
+Reward/Risk ratio: 2
+
+Technical data:
+RSI: 54.01
+EMA20: 80.49
+EMA50: 79.45
+Relative Volume 20d: 0.89
+RS vs SPY 21d: -0.0514182519101837
+RS vs SPY 63d: 0.0961655453236252
+
+Scanner:
+Score: 71.0
+Grade: B - Valid Coil
+Checks Met: 5/8
+
+Rules:
+- Do not invent thresholds.
+- Do not recalculate the supplied risk metrics.
+- RSI 30-70 should not be called overbought or oversold.
+- Relative volume below 1.0 means below average.
+- Target prices are planned targets, not historical highs.
+
+Provide:
+1. Trend assessment
+2. Momentum assessment
+3. Volume assessment
+4. Risk/reward assessment
+5. Overall setup assessment
+PS C:\Users\jpate> $request.prompt = $prompt
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate>
+PS C:\Users\jpate> $result.response
+Here's the analysis of the APH stock setup based on the provided facts:
+
+**Trend Assessment:**
+The EMA20 (80.49) and EMA50 (79.45) values are relatively close, suggesting a sideways or weak trend. The long-term RSI vs SPY 63d value (0.0961655453236252) is slightly positive, indicating a slight upward trend. However, the short-term RSI (54.01) is in the middle of the 0-100 range, indicating a neutral to slightly oversold state.
+
+**Momentum Assessment:**
+The short-term RSI (54.01) is in the middle of the 0-100 range, indicating a neutral to slightly oversold state. The long-term RSI vs SPY 63d value (0.0961655453236252) is slightly positive, indicating a slight upward trend. However, the RSI vs SPY 21d value (-0.0514182519101837) is negative, indicating a slight downtrend.
+
+**Volume Assessment:**
+The Relative Volume 20d (0.89) is below 1.0, indicating below-average volume.
+
+**Risk/Reward Assessment:**
+The risk per share (4.1) is relatively high, and the reward to target 1 (8.2) is also high. The reward/risk ratio (2) is slightly above the ideal 1:1 ratio.
+
+**Overall Setup Assessment:**
+This setup appears to have mixed signals, with a neutral to slightly oversold RSI and a slight upward trend in the long-term RSI vs SPY 63d value. However, the risk per share is high, and the reward to target 1 is also high, which may indicate a riskier trade.
+PS C:\Users\jpate> $close = [double]$stock.Close
+PS C:\Users\jpate> $ema20 = [double]$stock.EMA20
+PS C:\Users\jpate> $ema50 = [double]$stock.EMA50
+PS C:\Users\jpate> $rsi = [double]$stock.RSI
+PS C:\Users\jpate> $relVolume = [double]$stock.'Rel_Volume_20d'
+PS C:\Users\jpate> $aboveEMA20 = $close -gt $ema20
+PS C:\Users\jpate> $aboveEMA50 = $close -gt $ema50
+PS C:\Users\jpate> $aboveEMA20
+True
+PS C:\Users\jpate> $aboveEMA50
+True
+PS C:\Users\jpate> -gt
+-gt : The term '-gt' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is
+correct and try again.
+At line:1 char:1
++ -gt
++ ~~~
+    + CategoryInfo          : ObjectNotFound: (-gt:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> if ($rsi -ge 70) {
+>>     $rsiState = "Overbought"
+>> }
+PS C:\Users\jpate> elseif ($rsi -le 30) {
+>>     $rsiState = "Oversold"
+>> }
+elseif : The term 'elseif' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is
+correct and try again.
+At line:1 char:1
++ elseif ($rsi -le 30) {
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (elseif:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> else {
+>>     $rsiState = "Neutral"
+>> }
+else : The term 'else' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is
+correct and try again.
+At line:1 char:1
++ else {
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (else:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> if ($rsi -ge 70) {
+>>     $rsiState = "Overbought"
+>> }
+PS C:\Users\jpate> elseif ($rsi -le 30) {
+>>     $rsiState = "Oversold"
+>> }
+elseif : The term 'elseif' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is
+correct and try again.
+At line:1 char:1
++ elseif ($rsi -le 30) {
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (elseif:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> else {
+>>     $rsiState = "Neutral"
+>> }
+else : The term 'else' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is
+correct and try again.
+At line:1 char:1
++ else {
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (else:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\jpate> if ($rsi -ge 70) {
+>>     $rsiState = "Overbought"
+>> } elseif ($rsi -le 30) {
+>>     $rsiState = "Oversold"
+>> } else {
+>>     $rsiState = "Neutral"
+>> }
+PS C:\Users\jpate> $rsiState
+Neutral
+PS C:\Users\jpate> $volumeState
+PS C:\Users\jpate> if ($relVolume -gt 1) {
+>>     $volumeState = "Above average"
+>> } elseif ($relVolume -lt 1) {
+>>     $volumeState = "Below average"
+>> } else {
+>>     $volumeState = "Average"
+>> }
+PS C:\Users\jpate> $volumeState
+Below average
+PS C:\Users\jpate> $factPacket = @{
+>>     Symbol = $stock.Symbol
+>>     Setup = $stock.'Setup Type'
+>>
+>>     Price = @{
+>>         Close = [double]$stock.Close
+>>         Entry = $entry
+>>         Stop = $stop
+>>         Target1 = $target1
+>>     }
+>>
+>>     Derived = @{
+>>         AboveEMA20 = $aboveEMA20
+>>         AboveEMA50 = $aboveEMA50
+>>         RSIState = $rsiState
+>>         VolumeState = $volumeState
+>>         RiskPerShare = $risk
+>>         RewardToTarget1 = $reward
+>>         RewardRisk = $rewardRisk
+>>     }
+>>
+>>     Scanner = @{
+>>         Score = [double]$stock.Score
+>>         Grade = $stock.Grade
+>>         ChecksMet = $stock.'Checks Met'
+>>     }
+>> }
+PS C:\Users\jpate> $factPacket
+
+Name                           Value
+----                           -----
+Price                          {Close, Stop, Target1, Entry}
+Scanner                        {Score, Grade, ChecksMet}
+Setup                          SETUP_LONG
+Symbol                         APH
+Derived                        {RewardRisk, RSIState, VolumeState, AboveEMA50...}
+
+
+PS C:\Users\jpate> $factJson = $factPacket | ConvertTo-Json -Depth 5
+PS C:\Users\jpate> $factJson
+{
+    "Price":  {
+                  "Close":  82.07,
+                  "Stop":  77.23,
+                  "Target1":  89.53,
+                  "Entry":  81.33
+              },
+    "Scanner":  {
+                    "Score":  71,
+                    "Grade":  "B - Valid Coil",
+                    "ChecksMet":  "5/8"
+                },
+    "Setup":  "SETUP_LONG",
+    "Symbol":  "APH",
+    "Derived":  {
+                    "RewardRisk":  2,
+                    "RSIState":  "Neutral",
+                    "VolumeState":  "Below average",
+                    "AboveEMA50":  true,
+                    "RiskPerShare":  4.1,
+                    "RewardToTarget1":  8.2,
+                    "AboveEMA20":  true
+                }
+}
+PS C:\Users\jpate> ConvertTo-Json -Depth 5
+
+cmdlet ConvertTo-Json at command pipeline position 1
+Supply values for the following parameters:
+InputObject:
+""
+PS C:\Users\jpate> $factPacket
+
+Name                           Value
+----                           -----
+Price                          {Close, Stop, Target1, Entry}
+Scanner                        {Score, Grade, ChecksMet}
+Setup                          SETUP_LONG
+Symbol                         APH
+Derived                        {RewardRisk, RSIState, VolumeState, AboveEMA50...}
+
+
+PS C:\Users\jpate> $factJson
+{
+    "Price":  {
+                  "Close":  82.07,
+                  "Stop":  77.23,
+                  "Target1":  89.53,
+                  "Entry":  81.33
+              },
+    "Scanner":  {
+                    "Score":  71,
+                    "Grade":  "B - Valid Coil",
+                    "ChecksMet":  "5/8"
+                },
+    "Setup":  "SETUP_LONG",
+    "Symbol":  "APH",
+    "Derived":  {
+                    "RewardRisk":  2,
+                    "RSIState":  "Neutral",
+                    "VolumeState":  "Below average",
+                    "AboveEMA50":  true,
+                    "RiskPerShare":  4.1,
+                    "RewardToTarget1":  8.2,
+                    "AboveEMA20":  true
+                }
+}
+PS C:\Users\jpate> $prompt = @"
+>> You are a stock research assistant.
+>>
+>> Use ONLY the structured facts below.
+>> Do not invent thresholds, prices, trends, or calculations.
+>> Do not reinterpret the derived fields.
+>> If a fact is not present, say it is unavailable.
+>>
+>> FACT PACKET:
+>> $factJson
+>>
+>> Provide:
+>> 1. Trend assessment
+>> 2. Momentum assessment
+>> 3. Volume assessment
+>> 4. Risk/reward assessment
+>> 5. Overall setup assessment
+>>
+>> Keep the response concise and factual.
+>> "@
+PS C:\Users\jpate> $request.prompt = $prompt
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate> $result.response
+Here are the assessments based on the provided facts:
+
+1. Trend assessment: Neutral (AboveEMA50 and AboveEMA20 are true)
+2. Momentum assessment: Neutral (RSIState is Neutral)
+3. Volume assessment: Below average (VolumeState is Below average)
+4. Risk/reward assessment: Available (RewardRisk is 2)
+5. Overall setup assessment: Available (Setup is SETUP_LONG)
+PS C:\Users\jpate> if ($aboveEMA20 -and $aboveEMA50) {
+>>     $trendState = "Price above both EMA20 and EMA50"
+>> } elseif ($aboveEMA20 -or $aboveEMA50) {
+>>     $trendState = "Price above one moving average"
+>> } else {
+>>     $trendState = "Price below both EMA20 and EMA50"
+>> }
+PS C:\Users\jpate> $trendState
+Price above both EMA20 and EMA50
+PS C:\Users\jpate> $factPacket.Derived.TrendState = $trendState
+PS C:\Users\jpate> $factPacket.Derived
+
+Name                           Value
+----                           -----
+RiskPerShare                   4.1
+RewardToTarget1                8.2
+RSIState                       Neutral
+RewardRisk                     2
+AboveEMA20                     True
+VolumeState                    Below average
+AboveEMA50                     True
+TrendState                     Price above both EMA20 and EMA50
+
+
+PS C:\Users\jpate> $factJson = $factPacket | ConvertTo-Json -Depth 5
+PS C:\Users\jpate> $factPacket.Derived.TrendState = $trendState
+PS C:\Users\jpate> $factPacket.Derived
+
+Name                           Value
+----                           -----
+RiskPerShare                   4.1
+RewardToTarget1                8.2
+RSIState                       Neutral
+RewardRisk                     2
+AboveEMA20                     True
+VolumeState                    Below average
+AboveEMA50                     True
+TrendState                     Price above both EMA20 and EMA50
+
+
+PS C:\Users\jpate> $prompt = @"
+>> You are a stock research assistant.
+>>
+>> Use ONLY the structured facts below.
+>> Do not invent thresholds, calculations, or interpretations.
+>> Treat all fields under Derived as authoritative classifications.
+>> If a fact is unavailable, say unavailable.
+>>
+>> FACT PACKET:
+>> $factJson
+>>
+>> Write a concise research summary covering:
+>> 1. Trend
+>> 2. Momentum
+>> 3. Volume
+>> 4. Risk/reward
+>> 5. Overall setup
+>>
+>> Do not provide investment advice.
+>> "@
+PS C:\Users\jpate> $request.prompt = $prompt
+PS C:\Users\jpate> $body = $request | ConvertTo-Json
+PS C:\Users\jpate>
+PS C:\Users\jpate> $result = Invoke-RestMethod `
+>>     -Uri "http://localhost:11434/api/generate" `
+>>     -Method Post `
+>>     -ContentType "application/json" `
+>>     -Body $body
+PS C:\Users\jpate>
+PS C:\Users\jpate> $result.response
+Based on the provided facts, here is a concise research summary:
+
+1. Trend: The stock is in a trend state of "Price above both EMA20 and EMA50".
+2. Momentum: The RSIState is "Neutral", indicating no clear momentum signal.
+3. Volume: The VolumeState is "Below average".
+4. Risk/reward: The RiskPerShare is 4.1, and the RewardToTarget1 is 8.2, indicating a risk-reward ratio of 2:1.
+5. Overall setup: The setup is "SETUP_LONG", indicating a long position.
+PS C:\Users\jpate>
